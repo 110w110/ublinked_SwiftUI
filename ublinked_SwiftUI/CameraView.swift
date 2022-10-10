@@ -10,6 +10,7 @@ import AVFoundation
 
 struct CameraView: View {
     @ObservedObject var viewModel = CameraViewModel()
+    @ObservedObject var recognizer = EyesRecognizer()
 
         var body: some View {
             ZStack {
@@ -90,7 +91,11 @@ struct CameraView: View {
                                     .frame(width: 65, height: 65)
                                     .padding()
                                 
-                                Button(action: {viewModel.capturePhoto()}) {
+                                Button(action: {
+//                                    viewModel.capturePhoto()
+                                    recognizer.recognize()
+                                    
+                                }) {
                                     Circle()
                                         .fill(Color.white)
                                         .frame(width: 55, height: 55)

@@ -15,9 +15,7 @@ target 'ublinked_SwiftUI' do
   target 'ublinked_SwiftUIUITests' do
     # Pods for testing
   end
-pod 'Firebase/MLVision', '6.25.0'
-# If you want to detect face contours (landmark detection and classification
-# don't require this additional model):
-pod 'Firebase/MLVisionFaceModel', '6.25.0'
+#Firebase
+pod 'GoogleMLKit/FaceDetection', '3.2.0'
 
 end

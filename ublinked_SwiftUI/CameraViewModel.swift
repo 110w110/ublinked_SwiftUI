@@ -14,7 +14,6 @@ class CameraViewModel: ObservableObject {
     private let session: AVCaptureSession
     let cameraPreview: AnyView
 
-    
     private var subscriptions = Set<AnyCancellable>()
     
     @Published var recentImage: UIImage?
