@@ -65,10 +65,20 @@ struct CameraView: View {
                         HStack(alignment: .center){
                             // 찍은 사진 미리보기, 일단 액션 X
                             Button(action: {}) {
-                                Rectangle()
-                                    .stroke(lineWidth: 2)
-                                    .frame(width: 50, height: 50)
-                                    .padding(15)
+                                if let previewImage = viewModel.recentImage {
+                                    Image(uiImage: previewImage)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 50, height: 50)
+                                        .clipShape(Rectangle())
+                                        .aspectRatio(1, contentMode: .fit)
+                                        .padding(15)
+                                } else {
+                                    Rectangle()
+                                        .stroke(lineWidth: 2)
+                                        .frame(width: 50, height: 50)
+                                        .padding(15)
+                                }
                             }
                             
                             Spacer()

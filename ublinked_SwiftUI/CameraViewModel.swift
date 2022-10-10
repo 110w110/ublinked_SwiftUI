@@ -7,12 +7,17 @@
 
 import SwiftUI
 import AVFoundation
+import Combine
 
 class CameraViewModel: ObservableObject {
     private let model: Camera
     private let session: AVCaptureSession
     let cameraPreview: AnyView
 
+    
+    private var subscriptions = Set<AnyCancellable>()
+    
+    @Published var recentImage: UIImage?
     @Published var isFlashOn = false
     @Published var isSilentModeOn = false
     
@@ -29,6 +34,7 @@ class CameraViewModel: ObservableObject {
     }
     
     func capturePhoto() {
+        model.capturePhoto()
         print("[CameraViewModel]: Photo captured!")
     }
     
@@ -40,13 +46,23 @@ class CameraViewModel: ObservableObject {
         model = Camera()
         session = model.session
         cameraPreview = AnyView(CameraPreviewView(session: session))
+        
+        
+        model.$recentImage.sink { [weak self] (photo) in
+            guard let pic = photo else { return }
+            self?.recentImage = pic
+        }
+        .store(in: &self.subscriptions)
     }
 }
 
-class Camera: ObservableObject {
+class Camera: NSObject, ObservableObject {
     var session = AVCaptureSession()
     var videoDeviceInput: AVCaptureDeviceInput!
     let output = AVCapturePhotoOutput()
+    var photoData = Data(count: 0)
+    
+    @Published var recentImage: UIImage?
     
     // 카메라 셋업 과정을 담당하는 함수, positio
     func setUpCamera() {
@@ -91,5 +107,45 @@ class Camera: ObservableObject {
             // 거절했을 경우
             print("Permession declined")
         }
+    }
+    
+    func capturePhoto() {
+        // 사진 옵션 세팅
+        let photoSettings = AVCapturePhotoSettings()
+        
+        self.output.capturePhoto(with: photoSettings, delegate: self)
+        print("[Camera]: Photo's taken")
+    }
+    
+    func savePhoto(_ imageData: Data) {
+        guard let image = UIImage(data: imageData) else { return }
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        
+        // 사진 저장하기
+        print("[Camera]: Photo's saved")
+    }
+
+}
+extension Camera: AVCapturePhotoCaptureDelegate {
+    func photoOutput(_ output: AVCapturePhotoOutput, willBeginCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
+        AudioServicesDisposeSystemSoundID(1108)
+    }
+    
+    func photoOutput(_ output: AVCapturePhotoOutput, willCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
+        AudioServicesDisposeSystemSoundID(1108)
+    }
+    
+    func photoOutput(_ output: AVCapturePhotoOutput, didCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
+        AudioServicesDisposeSystemSoundID(1108)
+    }
+    
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        AudioServicesDisposeSystemSoundID(1108)
+        guard let imageData = photo.fileDataRepresentation() else { return }
+        
+        self.recentImage = UIImage(data: imageData)
+        self.savePhoto(imageData)
+        
+        print("[CameraModel]: Capture routine's done")
     }
 }

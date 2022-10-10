@@ -51,7 +51,13 @@
 		33AD0FBB28F2E8B4009F9D14 /* ublinked_SwiftUIUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ublinked_SwiftUIUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		33AD0FC828F31CAD009F9D14 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		33BF7CC628F31FE1005C64F1 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
+
 		74B8029728F41F76004330B1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+
+		4E1CEEBD28F44FB9006E688A /* start.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = start.mp3; sourceTree = "<group>"; };
+		4E1CEEBE28F44FB9006E688A /* end.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = end.mp3; sourceTree = "<group>"; };
+		4E1CEEBF28F44FB9006E688A /* ing.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ing.mp3; sourceTree = "<group>"; };
+
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +111,8 @@
 			isa = PBXGroup;
 			children = (
 				74B8029728F41F76004330B1 /* GoogleService-Info.plist */,
+
+				4E1CEEB628F44F84006E688A /* Resource */,
 				33AD0F9E28F2E8B3009F9D14 /* ublinked_SwiftUIApp.swift */,
 				33AD0FC828F31CAD009F9D14 /* CameraView.swift */,
 				33BF7CC628F31FE1005C64F1 /* CameraViewModel.swift */,
@@ -138,6 +146,16 @@
 				33AD0FBB28F2E8B4009F9D14 /* ublinked_SwiftUIUITestsLaunchTests.swift */,
 			);
 			path = ublinked_SwiftUIUITests;
+			sourceTree = "<group>";
+		};
+		4E1CEEB628F44F84006E688A /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				4E1CEEBD28F44FB9006E688A /* start.mp3 */,
+				4E1CEEBF28F44FB9006E688A /* ing.mp3 */,
+				4E1CEEBE28F44FB9006E688A /* end.mp3 */,
+			);
+			path = Resource;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -442,11 +460,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ublinked_SwiftUI/Preview Content\"";
-				DEVELOPMENT_TEAM = FFJBFGGRGW;
+				DEVELOPMENT_TEAM = 5A332893CJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = "u-Blinked을 제대로 사용하기 위해서 카메라 접근을 허용해주세요!";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
+				INFOPLIST_KEY_CFBundleDisplayName = uBlinked;
+				INFOPLIST_KEY_NSCameraUsageDescription = "촬영을 위해 카메라에 접근합니다";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진을 저장하기 위해 앨범에 접근합니다";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진을 확인하기 위해 앨범에 접근합니다";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -458,7 +478,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.taehee.ublinked-SwiftUI";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.taehee.ublinked-SwiftUI-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -474,11 +494,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ublinked_SwiftUI/Preview Content\"";
-				DEVELOPMENT_TEAM = FFJBFGGRGW;
+				DEVELOPMENT_TEAM = 5A332893CJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = "u-Blinked을 제대로 사용하기 위해서 카메라 접근을 허용해주세요!";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
+				INFOPLIST_KEY_CFBundleDisplayName = uBlinked;
+				INFOPLIST_KEY_NSCameraUsageDescription = "촬영을 위해 카메라에 접근합니다";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진을 저장하기 위해 앨범에 접근합니다";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진을 확인하기 위해 앨범에 접근합니다";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -490,7 +512,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.taehee.ublinked-SwiftUI";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.taehee.ublinked-SwiftUI-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
