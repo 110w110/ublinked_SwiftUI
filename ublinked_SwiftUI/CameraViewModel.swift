@@ -21,6 +21,9 @@ class CameraViewModel: ObservableObject {
     @Published var isFlashOn = false
     @Published var isSilentModeOn = false
     
+//    var audioPlayer : AVPlayer!
+    var audioPlayer : AVAudioPlayer?
+    
     func configure() {
         model.requestAndCheckPermissions()
     }
@@ -34,6 +37,31 @@ class CameraViewModel: ObservableObject {
     }
     
     func capturePhoto() {
+        
+        let url = Bundle.main.url(forResource: "test", withExtension: "mp3")
+        if let url = url {
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: url)
+                audioPlayer?.play()
+                print("audio play")
+            } catch {
+                print(error)
+            }
+        }
+        else {
+            print("failed")
+        }
+//        guard let url = Bundle.main.url(forResource: "start", withExtension: "mp3") else {
+//            print("error")
+//            return
+//        }
+//        do {
+//            audioPlayer = try AVPlayer(url: url)
+//        } catch {
+//            print("audio file error")
+//        }
+        audioPlayer?.prepareToPlay()
+        audioPlayer?.play()
         model.capturePhoto()
         print("[CameraViewModel]: Photo captured!")
     }
