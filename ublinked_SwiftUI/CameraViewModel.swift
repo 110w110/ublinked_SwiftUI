@@ -21,7 +21,6 @@ class CameraViewModel: ObservableObject {
     @Published var isFlashOn = false
     @Published var isSilentModeOn = false
     
-//    var audioPlayer : AVPlayer!
     var audioPlayer : AVAudioPlayer?
     
     func configure() {
@@ -38,12 +37,12 @@ class CameraViewModel: ObservableObject {
     
     func capturePhoto() {
         
-        let url = Bundle.main.url(forResource: "test", withExtension: "mp3")
-        if let url = url {
+        let start = Bundle.main.url(forResource: "start", withExtension: "mp3")
+        if let url = start {
             do {
                 audioPlayer = try AVAudioPlayer(contentsOf: url)
                 audioPlayer?.play()
-                print("audio play")
+                print("start play")
             } catch {
                 print(error)
             }
@@ -51,18 +50,36 @@ class CameraViewModel: ObservableObject {
         else {
             print("failed")
         }
-//        guard let url = Bundle.main.url(forResource: "start", withExtension: "mp3") else {
-//            print("error")
-//            return
-//        }
-//        do {
-//            audioPlayer = try AVPlayer(url: url)
-//        } catch {
-//            print("audio file error")
-//        }
+
         audioPlayer?.prepareToPlay()
         audioPlayer?.play()
         model.capturePhoto()
+        let ing = Bundle.main.url(forResource: "ing", withExtension: "mp3")
+        if let url = ing {
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: url)
+                audioPlayer?.play()
+                print("ing play")
+            } catch {
+                print(error)
+            }
+        }
+        else {
+            print("failed")
+        }
+        let end = Bundle.main.url(forResource: "end", withExtension: "mp3")
+        if let url = end {
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: url)
+                audioPlayer?.play()
+                print("end play")
+            } catch {
+                print(error)
+            }
+        }
+        else {
+            print("failed")
+        }
         print("[CameraViewModel]: Photo captured!")
     }
     
