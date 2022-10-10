@@ -16,7 +16,7 @@
 		33AD0FBC28F2E8B4009F9D14 /* ublinked_SwiftUIUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AD0FBB28F2E8B4009F9D14 /* ublinked_SwiftUIUITestsLaunchTests.swift */; };
 		33AD0FC928F31CAD009F9D14 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AD0FC828F31CAD009F9D14 /* CameraView.swift */; };
 		33BF7CC728F31FE1005C64F1 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33BF7CC628F31FE1005C64F1 /* CameraViewModel.swift */; };
-		4E1CEEC928F45C8D006E688A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4E1CEEC828F45C8D006E688A /* GoogleService-Info.plist */; };
+		33BF7CCD28F461EB005C64F1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 33BF7CCC28F461EB005C64F1 /* GoogleService-Info.plist */; };
 		4E1CEECD28F45F9B006E688A /* start.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4E1CEECA28F45F9B006E688A /* start.mp3 */; };
 		4E1CEECE28F45F9B006E688A /* end.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4E1CEECB28F45F9B006E688A /* end.mp3 */; };
 		4E1CEECF28F45F9B006E688A /* ing.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4E1CEECC28F45F9B006E688A /* ing.mp3 */; };
@@ -54,7 +54,7 @@
 		33AD0FBB28F2E8B4009F9D14 /* ublinked_SwiftUIUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ublinked_SwiftUIUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		33AD0FC828F31CAD009F9D14 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		33BF7CC628F31FE1005C64F1 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
-		4E1CEEC828F45C8D006E688A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		33BF7CCC28F461EB005C64F1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4E1CEECA28F45F9B006E688A /* start.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = start.mp3; sourceTree = "<group>"; };
 		4E1CEECB28F45F9B006E688A /* end.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = end.mp3; sourceTree = "<group>"; };
 		4E1CEECC28F45F9B006E688A /* ing.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ing.mp3; sourceTree = "<group>"; };
@@ -110,7 +110,7 @@
 		33AD0F9D28F2E8B3009F9D14 /* ublinked_SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
-				4E1CEEC828F45C8D006E688A /* GoogleService-Info.plist */,
+				33BF7CCC28F461EB005C64F1 /* GoogleService-Info.plist */,
 				4E1CEEB628F44F84006E688A /* Resource */,
 				33AD0F9E28F2E8B3009F9D14 /* ublinked_SwiftUIApp.swift */,
 				33AD0FC828F31CAD009F9D14 /* CameraView.swift */,
@@ -273,7 +273,7 @@
 				4E1CEECE28F45F9B006E688A /* end.mp3 in Resources */,
 				4E1CEECF28F45F9B006E688A /* ing.mp3 in Resources */,
 				33AD0FA328F2E8B4009F9D14 /* Assets.xcassets in Resources */,
-				4E1CEEC928F45C8D006E688A /* GoogleService-Info.plist in Resources */,
+				33BF7CCD28F461EB005C64F1 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -462,7 +462,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ublinked_SwiftUI/Preview Content\"";
-				DEVELOPMENT_TEAM = 5A332893CJ;
+				DEVELOPMENT_TEAM = 966SGMD852;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = uBlinked;
@@ -480,7 +480,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.taehee.ublinked-SwiftUI-";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.taehee.ublinked-SwiftUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -496,7 +496,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ublinked_SwiftUI/Preview Content\"";
-				DEVELOPMENT_TEAM = 5A332893CJ;
+				DEVELOPMENT_TEAM = 966SGMD852;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = uBlinked;
@@ -514,7 +514,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.taehee.ublinked-SwiftUI-";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.taehee.ublinked-SwiftUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
