@@ -7,12 +7,17 @@
 
 import SwiftUI
 import AVFoundation
+import Combine
 
 class CameraViewModel: ObservableObject {
     private let model: Camera
     private let session: AVCaptureSession
     let cameraPreview: AnyView
 
+    
+    private var subscriptions = Set<AnyCancellable>()
+    
+    @Published var recentImage: UIImage?
     @Published var isFlashOn = false
     @Published var isSilentModeOn = false
     
@@ -41,6 +46,13 @@ class CameraViewModel: ObservableObject {
         model = Camera()
         session = model.session
         cameraPreview = AnyView(CameraPreviewView(session: session))
+        
+        
+        model.$recentImage.sink { [weak self] (photo) in
+            guard let pic = photo else { return }
+            self?.recentImage = pic
+        }
+        .store(in: &self.subscriptions)
     }
 }
 
@@ -48,8 +60,9 @@ class Camera: NSObject, ObservableObject {
     var session = AVCaptureSession()
     var videoDeviceInput: AVCaptureDeviceInput!
     let output = AVCapturePhotoOutput()
-    
     var photoData = Data(count: 0)
+    
+    @Published var recentImage: UIImage?
     
     // 카메라 셋업 과정을 담당하는 함수, positio
     func setUpCamera() {
@@ -125,6 +138,8 @@ extension Camera: AVCapturePhotoCaptureDelegate {
     
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation() else { return }
+        
+        self.recentImage = UIImage(data: imageData)
         self.savePhoto(imageData)
         
         print("[CameraModel]: Capture routine's done")
