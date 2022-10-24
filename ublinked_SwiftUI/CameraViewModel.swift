@@ -10,6 +10,7 @@ import AVFoundation
 import Combine
 
 class CameraViewModel: ObservableObject {
+    
     private let model: Camera
     private let session: AVCaptureSession
     let cameraPreview: AnyView
@@ -106,6 +107,7 @@ class Camera: NSObject, ObservableObject {
     let output = AVCapturePhotoOutput()
     var photoData = Data(count: 0)
     
+    @ObservedObject var recognizer = EyesRecognizer()
     @Published var recentImage: UIImage?
     
     // 카메라 셋업 과정을 담당하는 함수, positio
@@ -188,7 +190,10 @@ extension Camera: AVCapturePhotoCaptureDelegate {
         guard let imageData = photo.fileDataRepresentation() else { return }
         
         self.recentImage = UIImage(data: imageData)
-        self.savePhoto(imageData)
+        
+        recognizer.recognize(imageData)
+        
+//        self.savePhoto(imageData)
         
         print("[CameraModel]: Capture routine's done")
     }

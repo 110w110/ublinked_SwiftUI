@@ -37,7 +37,7 @@ class EyesRecognizer: ObservableObject {
       }
     }
     
-    func recognize() {
+    func recognize(_ imageData: Data) {
         // High-accuracy landmark detection and face classification
         
         let options = FaceDetectorOptions()
@@ -47,9 +47,10 @@ class EyesRecognizer: ObservableObject {
 
         // Real-time contour detection of multiple faces
         // options.contourMode = .all
-        
-        let visionImage = VisionImage(image: UIImage(named: "Juno")!)
-        visionImage.orientation = UIImage(named: "Juno")!.imageOrientation
+  
+        let visionImage = VisionImage(image: UIImage(data: imageData)!)
+//        let visionImage = VisionImage(image: UIImage(named: "Juno")!)
+//        visionImage.orientation = UIImage(named: "Juno")!.imageOrientation
         
         
 //        guard let cBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
@@ -81,6 +82,8 @@ class EyesRecognizer: ObservableObject {
           let frame = face.frame
           if face.hasHeadEulerAngleX {
             let rotX = face.headEulerAngleX  // Head is rotated to the uptoward rotX degrees
+              
+            print(rotX)
           }
           if face.hasHeadEulerAngleY {
             let rotY = face.headEulerAngleY  // Head is rotated to the right rotY degrees
@@ -124,6 +127,8 @@ class EyesRecognizer: ObservableObject {
 //
 //            guard let image = UIImage(data: imageData) else { return }
 //            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+            
+            // save
         }
         }
 

@@ -92,8 +92,8 @@ struct CameraView: View {
                                     .padding()
                                 
                                 Button(action: {
-//                                    viewModel.capturePhoto()
-                                    recognizer.recognize()
+                                    viewModel.capturePhoto()
+//                                    recognizer.recognize()
                                     
                                 }) {
                                     Circle()

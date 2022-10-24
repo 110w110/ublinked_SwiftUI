@@ -197,7 +197,6 @@
 				CDEB34B87D27F1F987ACD835 /* Pods-ublinked_SwiftUITests.debug.xcconfig */,
 				EBB8F52C0212A65AE3749F91 /* Pods-ublinked_SwiftUITests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -652,7 +651,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ublinked_SwiftUI/Preview Content\"";
-				DEVELOPMENT_TEAM = 966SGMD852;
+				DEVELOPMENT_TEAM = 5A332893CJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = uBlinked;
@@ -687,7 +686,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ublinked_SwiftUI/Preview Content\"";
-				DEVELOPMENT_TEAM = 966SGMD852;
+				DEVELOPMENT_TEAM = 5A332893CJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = uBlinked;
