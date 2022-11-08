@@ -25,12 +25,17 @@ struct CameraView: View {
                     HStack(spacing: 0) {
                         // 셔터사운드 온오프
                         Button(action: {viewModel.switchFlash()}) {
-                            Image(systemName: viewModel.isFlashOn ?
-                                  "speaker.fill" : "speaker")
-                                .foregroundColor(viewModel.isFlashOn ? .yellow : .white)
-                                .frame(width: 15, height: 15)
+                            Image(viewModel.getNumPictures())
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                            
+                            
+//                            Image(systemName: viewModel.isFlashOn ?
+//                                  "Pictures1" : "Pictures3")
+//                                .foregroundColor(viewModel.isFlashOn ? .yellow : .white)
+//                                .frame(width: 15, height: 15)
                         }
-                        .padding(.horizontal, 25)
+                        .padding(.horizontal, 10)
                         
                         Spacer()
                         

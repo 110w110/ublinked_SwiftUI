@@ -20,6 +20,28 @@ class CameraViewModel: ObservableObject {
     @Published var recentImage: UIImage?
     @Published var isFlashOn = false
     @Published var isSilentModeOn = false
+    // 추가
+    private var numPictures = 1
+    
+    func getNumPictures() -> String {
+        switch numPictures{
+        case 1:
+            numPictures = 3
+            return "Pictures1"
+        case 3:
+            numPictures = 5
+            return "Pictures3"
+        case 5:
+            numPictures = 10
+            return "Pictures5"
+        case 10:
+            numPictures = 1
+            return "Pictures10"
+        default:
+            numPictures = 1
+            return "Pictures1"
+        }
+    }
     
     var audioPlayer : AVAudioPlayer?
     
