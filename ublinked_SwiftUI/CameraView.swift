@@ -7,7 +7,7 @@
 
 import SwiftUI
 import AVFoundation
-
+// 카메라 전환, 장수 선택, 로딩창, 완료 메시지
 struct CameraView: View {
     @ObservedObject var viewModel = CameraViewModel()
     @ObservedObject var recognizer = EyesRecognizer()
