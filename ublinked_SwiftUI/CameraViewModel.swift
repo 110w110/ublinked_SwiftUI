@@ -233,7 +233,7 @@ class CameraViewModel: ObservableObject {
             print("Detect Start")
             let faceDetector = FaceDetector()
             guard let image = UIImage(data: imageData) else { return }
-            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+//            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
             print("image size AAAA")
             print(image.size)
             let face = UIImageView(frame: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height))
@@ -241,16 +241,26 @@ class CameraViewModel: ObservableObject {
             face.image = UIImage(data: imageData)
             let result = faceDetector.getFaceRect(from: face.image!, imageView: face)
             
+            var save : Bool = true
             for i in 0..<result.count {
                 let rect = result[i]
                 
                 let imageRef = face.image?.cgImage!.cropping(to: rect)
                 let cropImage = UIImage(cgImage: imageRef!, scale: image.scale, orientation: image.imageOrientation)
                 //UIImage 넘겨야 하는 부분
-                let (err, blinking) = BlinkingRecognize(image: cropImage)
-                print("\(err) \(blinking)")
-                UIImageWriteToSavedPhotosAlbum(cropImage, nil, nil, nil)
+                let (noerr, blinking) = BlinkingRecognize(image: cropImage)
+                print("\(noerr) \(blinking)")
+                if noerr == true && blinking == true {
+                    save = false
+                    break
+                }
+//                UIImageWriteToSavedPhotosAlbum(cropImage, nil, nil, nil)
                 
+            }
+            
+            if save == true {
+                print("OKAY")
+                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
             }
         }
 
