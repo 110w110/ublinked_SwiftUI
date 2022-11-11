@@ -247,7 +247,8 @@ class CameraViewModel: ObservableObject {
                 let imageRef = face.image?.cgImage!.cropping(to: rect)
                 let cropImage = UIImage(cgImage: imageRef!, scale: image.scale, orientation: image.imageOrientation)
                 //UIImage 넘겨야 하는 부분
-                print(BlinkingRecognize(image: cropImage))
+                let (err, blinking) = BlinkingRecognize(image: cropImage)
+                print("\(err) \(blinking)")
                 UIImageWriteToSavedPhotosAlbum(cropImage, nil, nil, nil)
                 
             }
@@ -325,7 +326,9 @@ class CameraViewModel: ObservableObject {
                 faceViewBounds.origin.x += offsetX
                 faceViewBounds.origin.y += offsetY
 
-                result.append(faceViewBounds)
+                var largeCrop = CGRect(x: faceViewBounds.origin.x - faceViewBounds.height / 3, y: faceViewBounds.origin.y - faceViewBounds.width / 10, width: faceViewBounds.width * 1.4, height: faceViewBounds.height * 1.4)
+//                result.append(faceViewBounds)
+                result.append(largeCrop)
             }
             
             return result
