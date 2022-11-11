@@ -17,7 +17,6 @@
 		33AD0FC928F31CAD009F9D14 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AD0FC828F31CAD009F9D14 /* CameraView.swift */; };
 		33BF7CC728F31FE1005C64F1 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33BF7CC628F31FE1005C64F1 /* CameraViewModel.swift */; };
 		33BF7CCD28F461EB005C64F1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 33BF7CCC28F461EB005C64F1 /* GoogleService-Info.plist */; };
-		33BF7CD128F47EE7005C64F1 /* EyesRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33BF7CD028F47EE7005C64F1 /* EyesRecognizer.swift */; };
 		4E1CEECD28F45F9B006E688A /* start.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4E1CEECA28F45F9B006E688A /* start.mp3 */; };
 		4E1CEECE28F45F9B006E688A /* end.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4E1CEECB28F45F9B006E688A /* end.mp3 */; };
 		4E1CEECF28F45F9B006E688A /* ing.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4E1CEECC28F45F9B006E688A /* ing.mp3 */; };
@@ -61,7 +60,6 @@
 		33AD0FC828F31CAD009F9D14 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		33BF7CC628F31FE1005C64F1 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
 		33BF7CCC28F461EB005C64F1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		33BF7CD028F47EE7005C64F1 /* EyesRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EyesRecognizer.swift; sourceTree = "<group>"; };
 		3FA95DF6242896D2A2C81530 /* Pods_ublinked_SwiftUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ublinked_SwiftUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D0625FA271AD1290ECB530A /* Pods-ublinked_SwiftUI-ublinked_SwiftUIUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ublinked_SwiftUI-ublinked_SwiftUIUITests.release.xcconfig"; path = "Target Support Files/Pods-ublinked_SwiftUI-ublinked_SwiftUIUITests/Pods-ublinked_SwiftUI-ublinked_SwiftUIUITests.release.xcconfig"; sourceTree = "<group>"; };
 		4E1CEECA28F45F9B006E688A /* start.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = start.mp3; sourceTree = "<group>"; };
@@ -135,7 +133,6 @@
 				33AD0FC828F31CAD009F9D14 /* CameraView.swift */,
 				33BF7CC628F31FE1005C64F1 /* CameraViewModel.swift */,
 				33AD0FA028F2E8B3009F9D14 /* ContentView.swift */,
-				33BF7CD028F47EE7005C64F1 /* EyesRecognizer.swift */,
 				33AD0FA228F2E8B4009F9D14 /* Assets.xcassets */,
 				33AD0FA428F2E8B4009F9D14 /* Preview Content */,
 			);
@@ -487,7 +484,6 @@
 			files = (
 				33AD0FC928F31CAD009F9D14 /* CameraView.swift in Sources */,
 				33BF7CC728F31FE1005C64F1 /* CameraViewModel.swift in Sources */,
-				33BF7CD128F47EE7005C64F1 /* EyesRecognizer.swift in Sources */,
 				33AD0FA128F2E8B3009F9D14 /* ContentView.swift in Sources */,
 				33AD0F9F28F2E8B3009F9D14 /* ublinked_SwiftUIApp.swift in Sources */,
 			);

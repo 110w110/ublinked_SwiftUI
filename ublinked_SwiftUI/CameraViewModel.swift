@@ -154,6 +154,34 @@ class CameraViewModel: ObservableObject {
             }
         }
         
+        func BlinkingRecognize(image: UIImage) -> (Bool, Bool) {
+            if let faceImage = CIImage(image: image) {
+                let accuracy = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+                let faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: accuracy)
+                let faces = faceDetector?.features(in: faceImage, options: [CIDetectorSmile:true, CIDetectorEyeBlink: true])
+
+                 if !faces!.isEmpty {
+                     for face in faces as! [CIFaceFeature] {
+                         let leftEyeClosed = face.leftEyeClosed
+                         let rightEyeClosed = face.rightEyeClosed
+                         let blinking = face.rightEyeClosed && face.leftEyeClosed
+                         let isSmiling = face.hasSmile
+
+                         print("isSmiling \(isSmiling)")
+                         print("blinking \(blinking)")
+                         print("rightEyeClosed \(rightEyeClosed)")
+                         print("leftEyeClosed \(leftEyeClosed)\n\n")
+                         
+                         return (true, rightEyeClosed || leftEyeClosed)
+                     }
+                 } else {
+                     print("No faces found")
+                     return (false, false)
+                 }
+            }
+            return (false, false)
+        }
+        
         func requestAndCheckPermissions() {
             // 카메라 권한 상태 확인
             switch AVCaptureDevice.authorizationStatus(for: .video) {
@@ -218,6 +246,8 @@ class CameraViewModel: ObservableObject {
                 
                 let imageRef = face.image?.cgImage!.cropping(to: rect)
                 let cropImage = UIImage(cgImage: imageRef!, scale: image.scale, orientation: image.imageOrientation)
+                //UIImage 넘겨야 하는 부분
+                print(BlinkingRecognize(image: cropImage))
                 UIImageWriteToSavedPhotosAlbum(cropImage, nil, nil, nil)
                 
             }
