@@ -23,7 +23,7 @@ class CameraViewModel: ObservableObject {
     // 추가
     private var numPictures = 1
     
-    func getNumPictures() -> String {
+    public func getNumPictures() -> String {
         switch numPictures{
         case 1:
             numPictures = 3

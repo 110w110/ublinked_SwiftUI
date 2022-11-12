@@ -10,14 +10,43 @@ import AVFoundation
 // 카메라 전환, 장수 선택, 로딩창, 완료 메시지
 struct CameraView: View {
     @ObservedObject var viewModel = CameraViewModel()
+    @State var progressValue: Float = 0.0
+    @State var progressViewOpacity : Float = 0.0
 //    @ObservedObject var recognizer = EyesRecognizer()
 
         var body: some View {
+//            ZStack {
+////                Color.yellow
+////                    .opacity(0.0)
+//////                    .edgesIgnoringSafeArea(.all)
+//            }
             ZStack {
                 viewModel.cameraPreview.ignoresSafeArea()
                     .onAppear {
                         viewModel.configure()
                     }
+                
+                VStack(alignment: .center) {
+                    ProgressBar(progress: self.$progressValue)
+                        .frame(width: 50.0,height: 50.0)
+                        .padding(40.0)
+                    
+                    Button(action: {
+                        //
+                        self.incrementProgress()
+                    }) {
+                        HStack {
+//                            Image(systemName: "plus.rectangle.fill")
+//                            Text("Increment")
+                        }
+                        .padding(15.0)
+                        .overlay(RoundedRectangle(cornerRadius: 15.0)
+                            .stroke(lineWidth: 2.0)
+                            .opacity(0)
+                        )
+                    }
+                
+                }.opacity(Double(progressViewOpacity))
                 
                 VStack(spacing: 0) {
                     Spacer()
@@ -125,6 +154,16 @@ struct CameraView: View {
                 .edgesIgnoringSafeArea(.all)
             }
         }
+    
+    func incrementProgress(){
+        let randomValue = Float([0.012,0.23,0.314].randomElement()!)
+        self.progressValue += randomValue
+        if self.progressValue != 0 {
+            progressViewOpacity = 1.0
+        } else {
+            progressViewOpacity = 0.0
+        }
+    }
 }
 
 struct CameraPreviewView: UIViewRepresentable {
@@ -154,6 +193,29 @@ struct CameraPreviewView: UIViewRepresentable {
     
     func updateUIView(_ uiView: VideoPreviewView, context: Context) {
         
+    }
+}
+
+struct ProgressBar: View {
+    @Binding var progress: Float
+    
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(lineWidth: 8.0)
+                .opacity(0.3)
+                .foregroundColor(Color.red)
+            
+            Circle()
+                .trim(from: 0.0, to: CGFloat(min(self.progress, 1.0)))
+                .stroke(style: StrokeStyle(lineWidth: 8.0, lineCap: .round, lineJoin: .round))
+                .rotationEffect(Angle(degrees: 270.0))
+                .animation(.linear)
+            
+            Text(String(format: "%d / 5", min(self.progress, 1.0) * 100.0))
+//                .font(.largeTitle)
+                .bold()
+        }
     }
 }
 
