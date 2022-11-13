@@ -11,7 +11,7 @@ import AVFoundation
 struct CameraView: View {
     @ObservedObject var viewModel = CameraViewModel()
     @State var progressValue: Float = 0.0
-    @State var progressViewOpacity : Float = 0.0
+//    @State var progressViewOpacity : Float = 0.0
     
     var body: some View {
         ZStack {
@@ -40,7 +40,7 @@ struct CameraView: View {
                 .frame(width: 50.0,height: 50.0)
 //                        .padding(40.0)
             }
-            .opacity(Double(progressViewOpacity))
+            .opacity(Double(viewModel.progressViewOpacity))
             .animation(.linear)
             
             VStack(spacing: 0) {
@@ -156,9 +156,9 @@ struct CameraView: View {
 //        self.progressValue += randomValue
         viewModel.picCount = (viewModel.picCount + 1) % viewModel.numPictures
         if viewModel.picCount != 0 {
-            progressViewOpacity = 1.0
+            viewModel.progressViewOpacity = 1.0
         } else {
-            progressViewOpacity = 0.0
+            viewModel.progressViewOpacity = 0.0
         }
     }
 }

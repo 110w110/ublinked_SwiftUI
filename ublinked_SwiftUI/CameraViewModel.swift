@@ -23,6 +23,7 @@ class CameraViewModel: ObservableObject {
     // 추가
     @Published var numPictures = 5
     @Published var picCount = 0
+    @Published var progressViewOpacity = 0.0
     
     var audioPlayer : AVAudioPlayer?
         
@@ -35,6 +36,8 @@ class CameraViewModel: ObservableObject {
         }
         
         func changeNumPictures() {
+            picCount = 0
+            progressViewOpacity = 0.0
             switch numPictures{
             case 1:
                 numPictures = 3
