@@ -82,9 +82,12 @@ class CameraViewModel: ObservableObject {
 
         audioPlayer?.prepareToPlay()
         audioPlayer?.play()
-        while picCount < numPictures {
-            model.capturePhoto()
-        }
+        
+//        while picCount < numPictures {
+//            model.capturePhoto()
+//        }
+        model.capturePhoto()
+        
         let ing = Bundle.main.url(forResource: "ing", withExtension: "mp3")
         if let url = ing {
             do {
