@@ -21,27 +21,8 @@ class CameraViewModel: ObservableObject {
     @Published var isFlashOn = false
     @Published var isSilentModeOn = false
     // 추가
-    private var numPictures = 1
-    
-    public func getNumPictures() -> String {
-        switch numPictures{
-        case 1:
-            numPictures = 3
-            return "Pictures1"
-        case 3:
-            numPictures = 5
-            return "Pictures3"
-        case 5:
-            numPictures = 10
-            return "Pictures5"
-        case 10:
-            numPictures = 1
-            return "Pictures10"
-        default:
-            numPictures = 1
-            return "Pictures1"
-        }
-    }
+    @Published var numPictures = 5
+    @Published var picCount = 0
     
     var audioPlayer : AVAudioPlayer?
         
@@ -49,12 +30,23 @@ class CameraViewModel: ObservableObject {
             model.requestAndCheckPermissions()
         }
         
-        func switchFlash() {
-            isFlashOn.toggle()
-        }
-        
         func switchSilent() {
             isSilentModeOn.toggle()
+        }
+        
+        func changeNumPictures() {
+            switch numPictures{
+            case 1:
+                numPictures = 3
+            case 3:
+                numPictures = 5
+            case 5:
+                numPictures = 10
+            case 10:
+                numPictures = 1
+            default:
+                numPictures = 1
+            }
         }
         
         func capturePhoto() {
