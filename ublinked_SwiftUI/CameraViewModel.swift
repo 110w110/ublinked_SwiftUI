@@ -9,6 +9,8 @@ import SwiftUI
 import AVFoundation
 import Combine
 
+var pictures = 0
+
 class CameraViewModel: ObservableObject {
     
     private let model: Camera
@@ -70,7 +72,9 @@ class CameraViewModel: ObservableObject {
 
             audioPlayer?.prepareToPlay()
             audioPlayer?.play()
-            model.capturePhoto()
+            while pictures < numPictures {
+                model.capturePhoto()
+            }
             let ing = Bundle.main.url(forResource: "ing", withExtension: "mp3")
             if let url = ing {
                 do {
@@ -256,6 +260,8 @@ class CameraViewModel: ObservableObject {
             if save == true {
                 print("OKAY")
                 UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                pictures += 1
+                
             }
         }
 
