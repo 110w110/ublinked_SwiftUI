@@ -123,7 +123,7 @@ struct CameraView: View {
                             Button(action: {
                                 viewModel.capturePhoto()
 //                                    viewModel.objectWillChange.send()
-                                incPicCount()
+                                viewModel.incPicCount()
                                 print("\(viewModel.picCount) / \(viewModel.numPictures)")
                                 
                             }) {
@@ -152,15 +152,6 @@ struct CameraView: View {
         }
     }
     
-    func incPicCount(){
-//        self.progressValue += randomValue
-        viewModel.picCount = (viewModel.picCount + 1) % viewModel.numPictures
-        if viewModel.picCount != 0 {
-            viewModel.progressViewOpacity = 1.0
-        } else {
-            viewModel.progressViewOpacity = 0.0
-        }
-    }
 }
 
 struct CameraPreviewView: UIViewRepresentable {

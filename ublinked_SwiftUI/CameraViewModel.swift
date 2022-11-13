@@ -9,7 +9,7 @@ import SwiftUI
 import AVFoundation
 import Combine
 
-var pictures = 0
+//var pictures = 0
 
 class CameraViewModel: ObservableObject {
     
@@ -28,6 +28,16 @@ class CameraViewModel: ObservableObject {
     @Published var progressViewOpacity = 0.0
     
     var audioPlayer : AVAudioPlayer?
+    
+    public func incPicCount(){
+//        self.progressValue += randomValue
+        picCount = (picCount + 1) % numPictures
+        if picCount != 0 {
+            progressViewOpacity = 1.0
+        } else {
+            progressViewOpacity = 0.0
+        }
+    }
         
         func configure() {
             model.requestAndCheckPermissions()
@@ -72,7 +82,7 @@ class CameraViewModel: ObservableObject {
 
             audioPlayer?.prepareToPlay()
             audioPlayer?.play()
-            while pictures < numPictures {
+            while picCount < numPictures {
                 model.capturePhoto()
             }
             let ing = Bundle.main.url(forResource: "ing", withExtension: "mp3")
@@ -260,7 +270,7 @@ class CameraViewModel: ObservableObject {
             if save == true {
                 print("OKAY")
                 UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-                pictures += 1
+//                pictures += 1
                 
             }
         }
