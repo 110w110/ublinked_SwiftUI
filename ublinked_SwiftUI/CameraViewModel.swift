@@ -86,7 +86,12 @@ class CameraViewModel: ObservableObject {
 //        while picCount < numPictures {
 //            model.capturePhoto()
 //        }
-        model.capturePhoto()
+        
+        model.captureLoop(target: numPictures)
+        print(model.picCount)
+        Thread.sleep(forTimeInterval: 3.0)
+        model.captureLoop(target: numPictures)
+        print(model.picCount)
         
         let ing = Bundle.main.url(forResource: "ing", withExtension: "mp3")
         if let url = ing {
@@ -140,6 +145,8 @@ class Camera: NSObject, ObservableObject {
     var videoDeviceInput: AVCaptureDeviceInput!
     let output = AVCapturePhotoOutput()
     var photoData = Data(count: 0)
+    var isSilentModeOn = true
+    var picCount = 0
     
 //    @ObservedObject var recognizer = EyesRecognizer()
     @Published var recentImage: UIImage?
@@ -217,15 +224,44 @@ class Camera: NSObject, ObservableObject {
         }
     }
     
-    func capturePhoto() {
-        // 사진 옵션 세팅
-        let photoSettings = AVCapturePhotoSettings()
-        
-        self.output.capturePhoto(with: photoSettings, delegate: self)
-        print("[Camera]: Photo's taken")
+    func captureLoop(target: Int){
+        capturePhoto()
+//        Thread.sleep(forTimeInterval: 5.0)
+//        capturePhoto()
     }
     
+    func capturePhoto() {
+        // 사진 옵션 세팅
+//        print("sakdfjlaksjdflksajdfl \(target)")
+        
+        let photoSettings = AVCapturePhotoSettings()
+        self.output.capturePhoto(with: photoSettings, delegate: self)
+        print("[Camera]: Photo's taken \(picCount)")
+//        Thread.sleep(forTimeInterval: 5.0)
+//        let p = AVCapturePhotoSettings()
+//        self.output.capturePhoto(with: p, delegate: self)
+//        print("[Camera]: Photo's taken \(picCount)")
+        
+//        while picCount < target {
+//            let photoSettings = AVCapturePhotoSettings()
+//            self.output.capturePhoto(with: photoSettings, delegate: self)
+//            print("[Camera]: Photo's taken \(picCount)")
+//        }
+//        picCount = 0
+    }
     
+    func photoOutput(_ output: AVCapturePhotoOutput, willCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
+        if isSilentModeOn {
+            print("[Camera]: Silent sound activated")
+            AudioServicesDisposeSystemSoundID(1108)
+        }
+        
+    }
+    func photoOutput(_ output: AVCapturePhotoOutput, didCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
+        if isSilentModeOn {
+            AudioServicesDisposeSystemSoundID(1108)
+        }
+    }
     
     func savePhoto(_ imageData: Data) {
 //        guard let image = UIImage(data: imageData) else { return }
@@ -273,7 +309,7 @@ class Camera: NSObject, ObservableObject {
         if save == true {
             print("OKAY")
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-//                pictures += 1
+            picCount += 1
             
         }
     }
@@ -283,23 +319,15 @@ extension Camera: AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, willBeginCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
         AudioServicesDisposeSystemSoundID(1108)
     }
-    
-    func photoOutput(_ output: AVCapturePhotoOutput, willCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
-        AudioServicesDisposeSystemSoundID(1108)
-    }
-    
-    func photoOutput(_ output: AVCapturePhotoOutput, didCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
-        AudioServicesDisposeSystemSoundID(1108)
-    }
-    
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         AudioServicesDisposeSystemSoundID(1108)
         guard let imageData = photo.fileDataRepresentation() else { return }
-        
+
         self.recentImage = UIImage(data: imageData)
-        
+        print("11")
         self.savePhoto(imageData)
-        
+        print("22")
+
         print("[CameraModel]: Capture routine's done")
     }
 }
