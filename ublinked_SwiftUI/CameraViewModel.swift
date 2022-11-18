@@ -89,7 +89,10 @@ class CameraViewModel: ObservableObject {
         
         model.captureLoop(target: numPictures)
         print(model.picCount)
+        model.session.stopRunning()
+        print("asdfasd")
         Thread.sleep(forTimeInterval: 3.0)
+        print("dddggsd")
         model.captureLoop(target: numPictures)
         print(model.picCount)
         
@@ -119,10 +122,11 @@ class CameraViewModel: ObservableObject {
         else {
             print("failed")
         }
-        print("[CameraViewModel]: Photo captured!")
+        print("[CameraViewModel]: Photo captured! \(model.picCount)")
     }
     
     func changeCamera() {
+        model.changeCamera()
         print("[CameraViewModel]: Camera changed!")
     }
     
@@ -169,6 +173,60 @@ class Camera: NSObject, ObservableObject {
                 session.startRunning() // 세션 시작
             } catch {
                 print(error) // 에러 프린트
+            }
+        }
+    }
+    
+    func changeCamera() {
+        let currentPosition = self.videoDeviceInput.device.position
+        let preferredPosition: AVCaptureDevice.Position
+        
+        switch currentPosition {
+        case .unspecified, .front:
+            print("후면카메라로 전환합니다.")
+            preferredPosition = .back
+            
+        case .back:
+            print("전면카메라로 전환합니다.")
+            preferredPosition = .front
+            
+        @unknown default:
+            print("알 수 없는 포지션. 후면카메라로 전환합니다.")
+            preferredPosition = .back
+        }
+        
+        if let videoDevice = AVCaptureDevice
+            .default(.builtInWideAngleCamera,
+                     for: .video, position: preferredPosition) {
+            do {
+                let videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
+                self.session.beginConfiguration()
+                
+                if let inputs = session.inputs as? [AVCaptureDeviceInput] {
+                    for input in inputs {
+                        session.removeInput(input)
+                    }
+                }
+                if self.session.canAddInput(videoDeviceInput) {
+                    self.session.addInput(videoDeviceInput)
+                    self.videoDeviceInput = videoDeviceInput
+                } else {
+                    self.session.addInput(self.videoDeviceInput)
+                }
+            
+                if let connection =
+                    self.output.connection(with: .video) {
+                    if connection.isVideoStabilizationSupported {
+                        connection.preferredVideoStabilizationMode = .auto
+                    }
+                }
+                
+                output.isHighResolutionCaptureEnabled = true
+                output.maxPhotoQualityPrioritization = .quality
+                
+                self.session.commitConfiguration()
+            } catch {
+                print("Error occurred: \(error)")
             }
         }
     }

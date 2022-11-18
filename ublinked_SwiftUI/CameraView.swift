@@ -9,6 +9,7 @@ import SwiftUI
 import AVFoundation
 // 카메라 전환, 장수 선택, 로딩창, 완료 메시지
 struct CameraView: View {
+    @State var isLoading: Bool = true
     @ObservedObject var viewModel = CameraViewModel()
     @State var progressValue: Float = 0.0
 //    @State var progressViewOpacity : Float = 0.0
@@ -149,6 +150,16 @@ struct CameraView: View {
             }
             .foregroundColor(.white)
             .edgesIgnoringSafeArea(.all)
+            
+            // Launch Screen
+            if isLoading {
+                launchScreenView.transition(.opacity).zIndex(1)
+            }
+            
+        }.onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                withAnimation { isLoading.toggle() }
+            })
         }
     }
     
@@ -188,4 +199,22 @@ struct CameraView_Previews: PreviewProvider {
     static var previews: some View {
         CameraView()
     }
+}
+
+extension CameraView {
+    
+    var launchScreenView: some View {
+        
+        ZStack(alignment: .center) {
+            
+            LinearGradient(gradient: Gradient(colors: [Color("PrimaryColor"), Color("SubPrimaryColor")]),
+                            startPoint: .top, endPoint: .bottom)
+            .edgesIgnoringSafeArea(.all)
+            
+            Image("uBlinked_launchScreen")
+            
+        }
+        
+    }
+    
 }
