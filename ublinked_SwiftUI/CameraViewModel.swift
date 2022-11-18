@@ -15,28 +15,32 @@ class CameraViewModel: ObservableObject {
     
     private let model: Camera
     private let session: AVCaptureSession
-    let cameraPreview: AnyView
-
+    private var isCameraBusy = false
     private var subscriptions = Set<AnyCancellable>()
+    let cameraPreview: AnyView
+    let hapticImpact = UIImpactFeedbackGenerator()
+    var audioPlayer : AVAudioPlayer?
     
     @Published var recentImage: UIImage?
     @Published var isFlashOn = false
     @Published var isSilentModeOn = false
-    // 추가
     @Published var numPictures = 5
     @Published var picCount = 0
     @Published var progressViewOpacity = 0.0
+    @Published var shutterEffect = false
     
-    var audioPlayer : AVAudioPlayer?
     
     public func incPicCount(){
-//        self.progressValue += randomValue
         picCount = (picCount + 1) % numPictures
         if picCount != 0 {
             progressViewOpacity = 1.0
         } else {
             progressViewOpacity = 0.0
         }
+    }
+    
+    func picCountSync(){
+        picCount = model.picCount
     }
         
     func configure() {
@@ -45,6 +49,7 @@ class CameraViewModel: ObservableObject {
     
     func switchSilent() {
         isSilentModeOn.toggle()
+        model.flashMode = isFlashOn == true ? .on : .off
     }
     
     func changeNumPictures() {
@@ -65,64 +70,34 @@ class CameraViewModel: ObservableObject {
     }
     
     func capturePhoto() {
-        
-        let start = Bundle.main.url(forResource: "start", withExtension: "mp3")
-        if let url = start {
-            do {
-                audioPlayer = try AVAudioPlayer(contentsOf: url)
-                audioPlayer?.play()
-                print("start play")
-            } catch {
-                print(error)
+        if isCameraBusy == false {
+                    
+//            while picCount < numPictures {
+//                model.capturePhoto()
+//            }
+            
+            hapticImpact.impactOccurred()
+            withAnimation(.easeInOut(duration: 0.05)) {
+                shutterEffect = true
             }
-        }
-        else {
-            print("failed")
-        }
-
-        audioPlayer?.prepareToPlay()
-        audioPlayer?.play()
-        
-//        while picCount < numPictures {
-//            model.capturePhoto()
-//        }
-        
-        model.captureLoop(target: numPictures)
-        print(model.picCount)
-        model.session.stopRunning()
-        print("asdfasd")
-        Thread.sleep(forTimeInterval: 3.0)
-        print("dddggsd")
-        model.captureLoop(target: numPictures)
-        print(model.picCount)
-        
-        let ing = Bundle.main.url(forResource: "ing", withExtension: "mp3")
-        if let url = ing {
-            do {
-                audioPlayer = try AVAudioPlayer(contentsOf: url)
-                audioPlayer?.play()
-                print("ing play")
-            } catch {
-                print(error)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                withAnimation(.easeInOut(duration: 0.05)) {
+                    self.shutterEffect = false
+                }
             }
+            model.captureLoop(target: numPictures)
+            print(model.picCount)
+//            print("asdfasd")
+//            Thread.sleep(forTimeInterval: 3.0)
+//            print("dddggsd")
+//            model.captureLoop(target: numPictures)
+//            print(model.picCount)
+            
+            print("[CameraViewModel]: Photo captured! \(model.picCount)")
+        } else {
+            print("[CameraViewModel]: Camera's busy.")
         }
-        else {
-            print("failed")
-        }
-        let end = Bundle.main.url(forResource: "end", withExtension: "mp3")
-        if let url = end {
-            do {
-                audioPlayer = try AVAudioPlayer(contentsOf: url)
-                audioPlayer?.play()
-                print("end play")
-            } catch {
-                print(error)
-            }
-        }
-        else {
-            print("failed")
-        }
-        print("[CameraViewModel]: Photo captured! \(model.picCount)")
+        
     }
     
     func changeCamera() {
@@ -141,21 +116,26 @@ class CameraViewModel: ObservableObject {
             self?.recentImage = pic
         }
         .store(in: &self.subscriptions)
+        
+        model.$isCameraBusy.sink { [weak self] (result) in
+            self?.isCameraBusy = result
+        }
+        .store(in: &self.subscriptions)
     }
 }
 
-class Camera: NSObject, ObservableObject {
+class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     var session = AVCaptureSession()
     var videoDeviceInput: AVCaptureDeviceInput!
     let output = AVCapturePhotoOutput()
     var photoData = Data(count: 0)
     var isSilentModeOn = true
     var picCount = 0
+    var flashMode: AVCaptureDevice.FlashMode = .off
     
-//    @ObservedObject var recognizer = EyesRecognizer()
+    @Published var isCameraBusy = false
     @Published var recentImage: UIImage?
     
-    // 카메라 셋업 과정을 담당하는 함수, positio
     func setUpCamera() {
         if let device = AVCaptureDevice.default(.builtInWideAngleCamera,
                                                 for: .video, position: .back) {
@@ -293,6 +273,7 @@ class Camera: NSObject, ObservableObject {
 //        print("sakdfjlaksjdflksajdfl \(target)")
         
         let photoSettings = AVCapturePhotoSettings()
+        photoSettings.flashMode = self.flashMode
         self.output.capturePhoto(with: photoSettings, delegate: self)
         print("[Camera]: Photo's taken \(picCount)")
 //        Thread.sleep(forTimeInterval: 5.0)
@@ -308,6 +289,12 @@ class Camera: NSObject, ObservableObject {
 //        picCount = 0
     }
     
+    func photoOutput(_ output: AVCapturePhotoOutput, willBeginCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
+        
+//        AudioServicesDisposeSystemSoundID(1108)
+        self.isCameraBusy = true
+    }
+    
     func photoOutput(_ output: AVCapturePhotoOutput, willCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
         if isSilentModeOn {
             print("[Camera]: Silent sound activated")
@@ -319,6 +306,21 @@ class Camera: NSObject, ObservableObject {
         if isSilentModeOn {
             AudioServicesDisposeSystemSoundID(1108)
         }
+    }
+    
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        AudioServicesDisposeSystemSoundID(1108)
+        guard let imageData = photo.fileDataRepresentation() else { return }
+
+        self.recentImage = UIImage(data: imageData)
+        print("11")
+        self.savePhoto(imageData)
+        print("22")
+
+        print("[CameraModel]: Capture routine's done")
+        
+        self.isCameraBusy = false
+        print("busy false")
     }
     
     func savePhoto(_ imageData: Data) {
@@ -372,22 +374,6 @@ class Camera: NSObject, ObservableObject {
         }
     }
 
-}
-extension Camera: AVCapturePhotoCaptureDelegate {
-    func photoOutput(_ output: AVCapturePhotoOutput, willBeginCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
-        AudioServicesDisposeSystemSoundID(1108)
-    }
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        AudioServicesDisposeSystemSoundID(1108)
-        guard let imageData = photo.fileDataRepresentation() else { return }
-
-        self.recentImage = UIImage(data: imageData)
-        print("11")
-        self.savePhoto(imageData)
-        print("22")
-
-        print("[CameraModel]: Capture routine's done")
-    }
 }
 
 class FaceDetector {

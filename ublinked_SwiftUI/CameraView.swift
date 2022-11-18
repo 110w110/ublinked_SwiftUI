@@ -18,18 +18,16 @@ struct CameraView: View {
         ZStack {
             viewModel.cameraPreview.ignoresSafeArea()
                 .onAppear {
-                    viewModel.configure()
-                }
+                viewModel.configure()
+            }
             
             ZStack(alignment: .center) {
                 Text("\(viewModel.picCount) / \(viewModel.numPictures)")
                     .bold()
                 
-                
                 ZStack {
                     Circle()
                         .stroke(lineWidth: 8.0)
-//                        .opacity(0.3)
                         .foregroundColor(Color.red)
                     
                     Circle()
@@ -39,7 +37,6 @@ struct CameraView: View {
                         .animation(.linear)
                 }
                 .frame(width: 50.0,height: 50.0)
-//                        .padding(40.0)
             }
             .opacity(Double(viewModel.progressViewOpacity))
             .animation(.linear)
@@ -48,7 +45,7 @@ struct CameraView: View {
                 Spacer()
                     .frame(height: 60)
                 HStack(spacing: 0) {
-                    // 셔터사운드 온오프
+                    // numPictures 변경
                     Button(action: {viewModel.changeNumPictures()}) {
                         Image("Pictures"+String(viewModel.numPictures))
                             .resizable()
@@ -122,8 +119,15 @@ struct CameraView: View {
                                 .padding()
                             
                             Button(action: {
+//                                while viewModel.picCount < viewModel.numPictures {
+//                                    viewModel.picCountSync()
+//                                    viewModel.capturePhoto()
+//    //                                    viewModel.objectWillChange.send()
+//                                    viewModel.incPicCount()
+//                                }
+                                
+                                viewModel.picCountSync()
                                 viewModel.capturePhoto()
-//                                    viewModel.objectWillChange.send()
                                 viewModel.incPicCount()
                                 print("\(viewModel.picCount) / \(viewModel.numPictures)")
                                 
@@ -161,6 +165,7 @@ struct CameraView: View {
                 withAnimation { isLoading.toggle() }
             })
         }
+        .opacity(viewModel.shutterEffect ? 0 : 1)
     }
     
 }
