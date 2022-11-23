@@ -86,15 +86,9 @@ class CameraViewModel: ObservableObject {
                     self.shutterEffect = false
                 }
             }
-            model.captureLoop(target: numPictures)
-            print(model.picCount)
-//            print("asdfasd")
-//            Thread.sleep(forTimeInterval: 3.0)
-//            print("dddggsd")
-//            model.captureLoop(target: numPictures)
-//            print(model.picCount)
             
-            print("[CameraViewModel]: Photo captured! \(model.picCount)")
+            model.capturePhoto()
+
             
         } else {
             print("[CameraViewModel]: Camera's busy.")
@@ -231,11 +225,6 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
                      let rightEyeClosed = face.rightEyeClosed
                      let blinking = face.rightEyeClosed && face.leftEyeClosed
                      let isSmiling = face.hasSmile
-
-                     print("isSmiling \(isSmiling)")
-                     print("blinking \(blinking)")
-                     print("rightEyeClosed \(rightEyeClosed)")
-                     print("leftEyeClosed \(leftEyeClosed)\n\n")
                      
                      return (true, rightEyeClosed || leftEyeClosed)
                  }
@@ -270,38 +259,17 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
         }
     }
     
-    func captureLoop(target: Int){
-        capturePhoto()
-//        Thread.sleep(forTimeInterval: 5.0)
-//        capturePhoto()
-    }
-    
     func capturePhoto() {
-        // 사진 옵션 세팅
-//        print("sakdfjlaksjdflksajdfl \(target)")
-        
         let photoSettings = AVCapturePhotoSettings()
         photoSettings.flashMode = self.flashMode
         self.output.capturePhoto(with: photoSettings, delegate: self)
         print("[Camera]: Photo's taken \(picCount)")
         self.picCount += 1
-//        Thread.sleep(forTimeInterval: 5.0)
-//        let p = AVCapturePhotoSettings()
-//        self.output.capturePhoto(with: p, delegate: self)
-//        print("[Camera]: Photo's taken \(picCount)")
-        
-//        while picCount < target {
-//            let photoSettings = AVCapturePhotoSettings()
-//            self.output.capturePhoto(with: photoSettings, delegate: self)
-//            print("[Camera]: Photo's taken \(picCount)")
-//        }
-//        picCount = 0
+
     }
     
     func photoOutput(_ output: AVCapturePhotoOutput, willBeginCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
-        
 //        AudioServicesDisposeSystemSoundID(1108)
-        print("fdghfjgkhl")
         self.isCameraBusy = true
     }
     
@@ -323,37 +291,19 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
         guard let imageData = photo.fileDataRepresentation() else { return }
 
         self.recentImage = UIImage(data: imageData)
-        print("11")
-        self.savePhoto(imageData)
-        print("22")
-
-        print("[CameraModel]: Capture routine's done")
+        
+        self.detectFace(imageData)
         
         self.isCameraBusy = false
         print("busy false")
     }
     
-    func savePhoto(_ imageData: Data) {
-//        guard let image = UIImage(data: imageData) else { return }
-//        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-//        let cropRect = CGRect(x: 500, y: 500, width: 500, height: 500)
-//        let imageRef = image.cgImage!.cropping(to: cropRect)
-//        let image1 = UIImage(cgImage: imageRef!, scale: image.scale, orientation: image.imageOrientation)
-//        UIImageWriteToSavedPhotosAlbum(image1, nil, nil, nil)
-  
-        detectFace(imageData)
-        // 사진 저장하기
-        print("[Camera]: Photo's saved")
-    }
     
     func detectFace(_ imageData: Data) {
         
-        print("Detect Start")
         let faceDetector = FaceDetector()
         guard let image = UIImage(data: imageData) else { return }
-//            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-        print("image size AAAA")
-        print(image.size)
+
         let face = UIImageView(frame: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height))
         
         face.image = UIImage(data: imageData)
@@ -365,14 +315,13 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
             
             let imageRef = face.image?.cgImage!.cropping(to: rect)
             let cropImage = UIImage(cgImage: imageRef!, scale: image.scale, orientation: image.imageOrientation)
+            
             //UIImage 넘겨야 하는 부분
             let (noerr, blinking) = BlinkingRecognize(image: cropImage)
-            print("\(noerr) \(blinking)")
             if noerr == true && blinking == true {
                 save = false
                 break
             }
-//                UIImageWriteToSavedPhotosAlbum(cropImage, nil, nil, nil)
             
         }
         
@@ -380,7 +329,6 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
             print("OKAY")
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
 //            self.picCount += 1
-            
         } else {
             
             self.picCount -= 1
@@ -389,6 +337,7 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     }
 
 }
+
 
 class FaceDetector {
     
@@ -404,29 +353,18 @@ class FaceDetector {
         guard let ciimage = CIImage(image: image) else { return [CGRect.zero] }
         
         let ciImageSize = ciimage.extent.size
-        print("ciImageSize!!!!!!!!!!!!!!!!!")
-        print(ciImageSize)
         var transform = CGAffineTransform(scaleX: 1, y: -1)
         transform = transform.translatedBy(x: 0, y: -ciImageSize.height)
         
         var features = detector.features(in: ciimage)
         
-        // Apply the transform to convert the coordinates
         var result : [CGRect] = []
         for i in 0..<features.count{
-            print("dd")
 
             var faceViewBounds = features[i].bounds.applying(transform)
 
-            // Calculate the actual position and size of the rectangle in the image view
             let viewSize = imageView.bounds.size
-
-//            let scale = min(viewSize.width / ciImageSize.width,
-//                            viewSize.height / ciImageSize.height)
-//            let offsetX = (viewSize.width - ciImageSize.width * scale) / 2
-//            let offsetY = (viewSize.height - ciImageSize.height * scale) / 2
             
-            // inverted x, y, scale
             let scale = min(viewSize.width / ciImageSize.height,
                             viewSize.height / ciImageSize.width)
             let offsetY = (viewSize.width - ciImageSize.height * scale) / 2
@@ -437,7 +375,6 @@ class FaceDetector {
             faceViewBounds.origin.y += offsetY
 
             var largeCrop = CGRect(x: faceViewBounds.origin.x - faceViewBounds.height / 3, y: faceViewBounds.origin.y - faceViewBounds.width / 10, width: faceViewBounds.width * 1.4, height: faceViewBounds.height * 1.4)
-//                result.append(faceViewBounds)
             result.append(largeCrop)
         }
         
