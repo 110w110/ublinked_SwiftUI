@@ -10,14 +10,11 @@ import AVFoundation
 import Combine
 import CoreML
 
-//var pictures = 0
-
 class CameraViewModel: ObservableObject {
-    
-    let model: Camera
     private let session: AVCaptureSession
     private var isCameraBusy = false
     private var subscriptions = Set<AnyCancellable>()
+    let model: Camera
     let cameraPreview: AnyView
     let hapticImpact = UIImpactFeedbackGenerator()
     var audioPlayer : AVAudioPlayer?
@@ -107,9 +104,9 @@ class CameraViewModel: ObservableObject {
 }
 
 class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
+    let output = AVCapturePhotoOutput()
     var session = AVCaptureSession()
     var videoDeviceInput: AVCaptureDeviceInput!
-    let output = AVCapturePhotoOutput()
     var photoData = Data(count: 0)
     var isSilentModeOn = true
     var flashMode: AVCaptureDevice.FlashMode = .off
@@ -120,7 +117,6 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     @Published var recentImage: UIImage?
     @Published var numPictures = 5
     @Published var progressViewOpacity = 0.0
-    
     @Published var imgArr2 : [UIImage] = []
     
     func setUpCamera() {
@@ -285,6 +281,7 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
                 self.isEnded = true
             }
             else if count < self.numPictures {
+                Thread.sleep(forTimeInterval: 0.1)
                 self.capturePhoto()
             }
             if self.picCount != 0 {
@@ -300,12 +297,10 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     
     
     func detectFace(completion: @escaping (Int) -> (), _ imageData: Data) {
-        
         let faceDetector = FaceDetector()
         guard let image = UIImage(data: imageData) else { return }
 
         let face = UIImageView(frame: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height))
-        
         face.image = UIImage(data: imageData)
         let result = faceDetector.getFaceRect(from: face.image!, imageView: face)
         
@@ -327,6 +322,7 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
         
         if save == true {
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+            imgArr2.append(UIImage(named: "Juno")!)
             completion(imgArr2.count)
         } else {
             completion(0)
@@ -338,7 +334,6 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
 
 
 class FaceDetector {
-    
     let context = CIContext()
     let opt = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
     var detector: CIDetector!
