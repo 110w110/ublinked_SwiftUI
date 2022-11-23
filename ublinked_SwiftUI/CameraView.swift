@@ -12,7 +12,6 @@ struct CameraView: View {
     @State var isLoading: Bool = true
     @ObservedObject var viewModel = CameraViewModel()
     @State var progressValue: Float = 0.0
-//    @State var progressViewOpacity : Float = 0.0
     @State var imgArr : [UIImage] = []
     
     var body: some View {
@@ -50,15 +49,10 @@ struct CameraView: View {
                     Button(action: {viewModel.changeNumPictures()}) {
                         Image("Pictures"+String(viewModel.model.numPictures))
                             .resizable()
-                            .frame(width: 30, height: 30)
+                            .frame(width: 35, height: 35)
                         
-                        
-//                            Image(systemName: viewModel.isFlashOn ?
-//                                  "Pictures1" : "Pictures3")
-//                                .foregroundColor(viewModel.isFlashOn ? .yellow : .white)
-//                                .frame(width: 15, height: 15)
                     }
-                    .padding(.horizontal, 10)
+                    .padding(.horizontal, 25)
                     
                     Spacer()
                     
@@ -67,7 +61,7 @@ struct CameraView: View {
                         Image(systemName: viewModel.isSilentModeOn ?
                               "bolt.fill" : "bolt")
                             .foregroundColor(viewModel.isSilentModeOn ? .yellow : .white)
-                            .frame(width: 15, height: 15)
+                            .frame(width: 25, height: 25)
                     }
                     .padding(.horizontal, 25)
                     
@@ -75,7 +69,7 @@ struct CameraView: View {
                     
                     Button(action: {viewModel.changeCamera()}) {
                         Image(systemName: "arrow.triangle.2.circlepath.camera")
-                            .frame(width: 15, height: 15)
+                            .frame(width: 25, height: 25)
                         
                     }
                     .padding(.horizontal, 25)
@@ -120,25 +114,8 @@ struct CameraView: View {
                                 .padding()
                             
                             Button(action: {
-//                                while viewModel.picCount < viewModel.numPictures {
-//                                    viewModel.picCountSync()
-//                                    viewModel.capturePhoto()
-//    //                                    viewModel.objectWillChange.send()
-//                                    viewModel.incPicCount()
-//                                    print("\(viewModel.picCount) / \(viewModel.numPictures)")
-//                                }
-                                
                                 viewModel.picCountSync()
                                 viewModel.capturePhoto()
-//                                viewModel.incPicCount()
-                                print("\(viewModel.picCount) / \(viewModel.model.numPictures)")
-//                                print(viewModel.model.imgArr2)
-//                                Thread.sleep(forTimeInterval: 5.0)
-//                                viewModel.picCountSync()
-//                                viewModel.capturePhoto()
-//                                viewModel.incPicCount()
-//                                print("\(viewModel.picCount) / \(viewModel.numPictures)")
-                                
                             }) {
                                 Circle()
                                     .fill(Color.white)

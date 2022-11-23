@@ -8,6 +8,7 @@
 import SwiftUI
 import AVFoundation
 import Combine
+import CoreML
 
 //var pictures = 0
 
@@ -24,20 +25,10 @@ class CameraViewModel: ObservableObject {
     @Published var recentImage: UIImage?
     @Published var isFlashOn = false
     @Published var isSilentModeOn = false
-//    @Published var numPictures = 5
     @Published var picCount = 0
-//    @Published var progressViewOpacity = 1.0
     @Published var shutterEffect = false
     
     
-//    public func incPicCount(){
-//        picCount = (picCount + 1) % model.numPictures
-//        if picCount != 0 {
-//            progressViewOpacity = 1.0
-//        } else {
-//            progressViewOpacity = 0.0
-//        }
-//    }
     func picCountSync(){
         picCount = model.picCount
     }
@@ -67,9 +58,6 @@ class CameraViewModel: ObservableObject {
     func capturePhoto() {
         if isCameraBusy == false {
                     
-//            while picCount < numPictures {
-//                model.capturePhoto()
-//            }
             model.capturePhoto()
 
             hapticImpact.impactOccurred()
@@ -81,9 +69,6 @@ class CameraViewModel: ObservableObject {
                     self.shutterEffect = false
                 }
             }
-            
-//            model.capturePhoto()
-            print("count : \(model.imgArr2.count)")
 
             
         } else {
@@ -264,12 +249,10 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
         self.isEnded = false
         self.output.capturePhoto(with: photoSettings, delegate: self)
         print("[Camera]: Photo's taken \(imgArr2.count)")
-//        self.picCount += 1
 
     }
     
     func photoOutput(_ output: AVCapturePhotoOutput, willBeginCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
-//        AudioServicesDisposeSystemSoundID(1108)
         self.isCameraBusy = true
     }
     func photoOutput(_ output: AVCapturePhotoOutput, willCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
@@ -291,7 +274,6 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
 
         self.recentImage = UIImage(data: imageData)
         
-//        self.detectFace(imageData)
         self.detectFace(completion: {
             count in
             print("asdfasdfasdfasfsfdfdasfd \(count)")
@@ -304,7 +286,6 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
             }
             else if count < self.numPictures {
                 self.capturePhoto()
-                print("wow")
             }
             if self.picCount != 0 {
                 self.progressViewOpacity = 1.0
@@ -345,15 +326,9 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
         }
         
         if save == true {
-            print("OKAY")
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-            imgArr2.append(UIImage(named: "Juno")!)
-            print("--count : \(imgArr2.count)")
-//            self.picCount += 1
             completion(imgArr2.count)
         } else {
-            
-//            self.picCount -= 1
             completion(0)
         }
         
