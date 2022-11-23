@@ -24,14 +24,14 @@ class CameraViewModel: ObservableObject {
     @Published var recentImage: UIImage?
     @Published var isFlashOn = false
     @Published var isSilentModeOn = false
-    @Published var numPictures = 5
+//    @Published var numPictures = 5
     @Published var picCount = 0
     @Published var progressViewOpacity = 0.0
     @Published var shutterEffect = false
     
     
     public func incPicCount(){
-        picCount = (picCount + 1) % numPictures
+        picCount = (picCount + 1) % model.numPictures
         if picCount != 0 {
             progressViewOpacity = 1.0
         } else {
@@ -51,17 +51,17 @@ class CameraViewModel: ObservableObject {
     func changeNumPictures() {
         picCount = 0
         progressViewOpacity = 0.0
-        switch numPictures{
+        switch model.numPictures{
         case 1:
-            numPictures = 3
+            model.numPictures = 3
         case 3:
-            numPictures = 5
+            model.numPictures = 5
         case 5:
-            numPictures = 10
+            model.numPictures = 10
         case 10:
-            numPictures = 1
+            model.numPictures = 1
         default:
-            numPictures = 1
+            model.numPictures = 1
         }
     }
     func capturePhoto() {
@@ -132,6 +132,7 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     @Published var picCount = 0
     @Published var isCameraBusy = false
     @Published var recentImage: UIImage?
+    @Published var numPictures = 5
     
     @Published var imgArr2 : [UIImage] = []
     
@@ -289,7 +290,7 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
             count in
             print("asdfasdfasdfasfsfdfdasfd \(count)")
             self.picCount = count
-            if count < 5 {
+            if count < self.numPictures {
                 self.capturePhoto()
                 print("wow")
             }

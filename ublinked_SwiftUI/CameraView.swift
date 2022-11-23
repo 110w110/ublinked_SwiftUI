@@ -23,7 +23,7 @@ struct CameraView: View {
             }
             
             ZStack(alignment: .center) {
-                Text("\(viewModel.picCount) / \(viewModel.numPictures)")
+                Text("\(viewModel.picCount) / \(viewModel.model.numPictures)")
                     .bold()
                 
                 ZStack {
@@ -32,7 +32,7 @@ struct CameraView: View {
                         .foregroundColor(Color.red)
                     
                     Circle()
-                        .trim(from: 0.0, to: CGFloat(CGFloat(viewModel.picCount) / CGFloat(viewModel.numPictures)))
+                        .trim(from: 0.0, to: CGFloat(CGFloat(viewModel.picCount) / CGFloat(viewModel.model.numPictures)))
                         .stroke(style: StrokeStyle(lineWidth: 8.0, lineCap: .round, lineJoin: .round))
                         .rotationEffect(Angle(degrees: 270.0))
                         .animation(.linear)
@@ -48,7 +48,7 @@ struct CameraView: View {
                 HStack(spacing: 0) {
                     // numPictures 변경
                     Button(action: {viewModel.changeNumPictures()}) {
-                        Image("Pictures"+String(viewModel.numPictures))
+                        Image("Pictures"+String(viewModel.model.numPictures))
                             .resizable()
                             .frame(width: 30, height: 30)
                         
@@ -128,14 +128,11 @@ struct CameraView: View {
 //                                    print("\(viewModel.picCount) / \(viewModel.numPictures)")
 //                                }
                                 
-                                imgArr.append(UIImage(named: "Juno")!)
-                                print(imgArr)
-                                UIImageWriteToSavedPhotosAlbum(imgArr[0],nil,nil,nil)
                                 viewModel.picCountSync()
                                 viewModel.capturePhoto()
                                 viewModel.incPicCount()
-                                print("\(viewModel.picCount) / \(viewModel.numPictures)")
-                                print(viewModel.model.imgArr2)
+                                print("\(viewModel.picCount) / \(viewModel.model.numPictures)")
+//                                print(viewModel.model.imgArr2)
 //                                Thread.sleep(forTimeInterval: 5.0)
 //                                viewModel.picCountSync()
 //                                viewModel.capturePhoto()
