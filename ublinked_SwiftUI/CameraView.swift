@@ -135,6 +135,7 @@ struct CameraView: View {
                                 viewModel.capturePhoto()
                                 viewModel.incPicCount()
                                 print("\(viewModel.picCount) / \(viewModel.numPictures)")
+                                print(viewModel.model.imgArr2)
 //                                Thread.sleep(forTimeInterval: 5.0)
 //                                viewModel.picCountSync()
 //                                viewModel.capturePhoto()

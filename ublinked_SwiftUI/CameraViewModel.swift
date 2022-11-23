@@ -13,7 +13,7 @@ import Combine
 
 class CameraViewModel: ObservableObject {
     
-    private let model: Camera
+    let model: Camera
     private let session: AVCaptureSession
     private var isCameraBusy = false
     private var subscriptions = Set<AnyCancellable>()
@@ -29,7 +29,6 @@ class CameraViewModel: ObservableObject {
     @Published var progressViewOpacity = 0.0
     @Published var shutterEffect = false
     
-    @Published var imgArr2 : [UIImage] = []
     
     public func incPicCount(){
         picCount = (picCount + 1) % numPictures
@@ -39,20 +38,16 @@ class CameraViewModel: ObservableObject {
             progressViewOpacity = 0.0
         }
     }
-    
     func picCountSync(){
         picCount = model.picCount
     }
-        
     func configure() {
         model.requestAndCheckPermissions()
     }
-    
     func switchSilent() {
         isSilentModeOn.toggle()
         model.flashMode = isFlashOn == true ? .on : .off
     }
-    
     func changeNumPictures() {
         picCount = 0
         progressViewOpacity = 0.0
@@ -69,14 +64,14 @@ class CameraViewModel: ObservableObject {
             numPictures = 1
         }
     }
-    
     func capturePhoto() {
         if isCameraBusy == false {
                     
-            while picCount < numPictures {
-                model.capturePhoto()
-            }
-            
+//            while picCount < numPictures {
+//                model.capturePhoto()
+//            }
+            model.capturePhoto()
+
             hapticImpact.impactOccurred()
             withAnimation(.easeInOut(duration: 0.05)) {
                 shutterEffect = true
@@ -87,7 +82,8 @@ class CameraViewModel: ObservableObject {
                 }
             }
             
-            model.capturePhoto()
+//            model.capturePhoto()
+            print("count : \(model.imgArr2.count)")
 
             
         } else {
@@ -95,7 +91,6 @@ class CameraViewModel: ObservableObject {
         }
         
     }
-    
     func changeCamera() {
         model.changeCamera()
         print("[CameraViewModel]: Camera changed!")
@@ -138,6 +133,8 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     @Published var isCameraBusy = false
     @Published var recentImage: UIImage?
     
+    @Published var imgArr2 : [UIImage] = []
+    
     func setUpCamera() {
         if let device = AVCaptureDevice.default(.builtInWideAngleCamera,
                                                 for: .video, position: .back) {
@@ -158,7 +155,6 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
             }
         }
     }
-    
     func changeCamera() {
         let currentPosition = self.videoDeviceInput.device.position
         let preferredPosition: AVCaptureDevice.Position
@@ -212,7 +208,6 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
             }
         }
     }
-    
     func BlinkingRecognize(image: UIImage) -> (Bool, Bool) {
         if let faceImage = CIImage(image: image) {
             let accuracy = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
@@ -235,7 +230,6 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
         }
         return (false, false)
     }
-    
     func requestAndCheckPermissions() {
         // 카메라 권한 상태 확인
         switch AVCaptureDevice.authorizationStatus(for: .video) {
@@ -258,12 +252,11 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
             print("Permession declined")
         }
     }
-    
     func capturePhoto() {
         let photoSettings = AVCapturePhotoSettings()
         photoSettings.flashMode = self.flashMode
         self.output.capturePhoto(with: photoSettings, delegate: self)
-        print("[Camera]: Photo's taken \(picCount)")
+        print("[Camera]: Photo's taken \(imgArr2.count)")
         self.picCount += 1
 
     }
@@ -272,7 +265,6 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
 //        AudioServicesDisposeSystemSoundID(1108)
         self.isCameraBusy = true
     }
-    
     func photoOutput(_ output: AVCapturePhotoOutput, willCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
         if isSilentModeOn {
             print("[Camera]: Silent sound activated")
@@ -292,14 +284,23 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
 
         self.recentImage = UIImage(data: imageData)
         
-        self.detectFace(imageData)
+//        self.detectFace(imageData)
+        self.detectFace(completion: {
+            count in
+            print("asdfasdfasdfasfsfdfdasfd \(count)")
+            self.picCount = count
+            if count < 5 {
+                self.capturePhoto()
+                print("wow")
+            }
+        }, imageData)
         
         self.isCameraBusy = false
         print("busy false")
     }
     
     
-    func detectFace(_ imageData: Data) {
+    func detectFace(completion: @escaping (Int) -> (), _ imageData: Data) {
         
         let faceDetector = FaceDetector()
         guard let image = UIImage(data: imageData) else { return }
@@ -328,10 +329,14 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
         if save == true {
             print("OKAY")
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+            imgArr2.append(UIImage(named: "Juno")!)
+            print("--count : \(imgArr2.count)")
 //            self.picCount += 1
+            completion(imgArr2.count)
         } else {
             
-            self.picCount -= 1
+//            self.picCount -= 1
+            completion(0)
         }
         
     }
