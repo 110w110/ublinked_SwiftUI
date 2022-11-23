@@ -128,6 +128,7 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     var photoData = Data(count: 0)
     var isSilentModeOn = true
     var flashMode: AVCaptureDevice.FlashMode = .off
+    var isEnded = false
     
     @Published var picCount = 0
     @Published var isCameraBusy = false
@@ -257,6 +258,10 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     func capturePhoto() {
         let photoSettings = AVCapturePhotoSettings()
         photoSettings.flashMode = self.flashMode
+        if self.progressViewOpacity == 0.0 {
+            self.progressViewOpacity = 1.0
+        }
+        self.isEnded = false
         self.output.capturePhoto(with: photoSettings, delegate: self)
         print("[Camera]: Photo's taken \(imgArr2.count)")
 //        self.picCount += 1
@@ -295,6 +300,7 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
             self.picCount = (self.picCount) % self.numPictures
             if count == self.numPictures {
                 self.imgArr2 = []
+                self.isEnded = true
             }
             else if count < self.numPictures {
                 self.capturePhoto()
@@ -302,7 +308,7 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
             }
             if self.picCount != 0 {
                 self.progressViewOpacity = 1.0
-            } else {
+            } else if self.isEnded == true {
                 self.progressViewOpacity = 0.0
             }
         }, imageData)
