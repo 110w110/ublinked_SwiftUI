@@ -39,7 +39,7 @@ struct CameraView: View {
                 }
                 .frame(width: 50.0,height: 50.0)
             }
-            .opacity(Double(viewModel.progressViewOpacity))
+            .opacity(Double(viewModel.model.progressViewOpacity))
             .animation(.linear)
             
             VStack(spacing: 0) {
@@ -108,7 +108,7 @@ struct CameraView: View {
                                     .frame(width: 50, height: 50)
                                     .padding(15)
                             }
-                        }
+                        }.opacity(0.0)
                         
                         Spacer()
                         
@@ -130,7 +130,7 @@ struct CameraView: View {
                                 
                                 viewModel.picCountSync()
                                 viewModel.capturePhoto()
-                                viewModel.incPicCount()
+//                                viewModel.incPicCount()
                                 print("\(viewModel.picCount) / \(viewModel.model.numPictures)")
 //                                print(viewModel.model.imgArr2)
 //                                Thread.sleep(forTimeInterval: 5.0)

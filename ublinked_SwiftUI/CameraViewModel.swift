@@ -26,18 +26,18 @@ class CameraViewModel: ObservableObject {
     @Published var isSilentModeOn = false
 //    @Published var numPictures = 5
     @Published var picCount = 0
-    @Published var progressViewOpacity = 0.0
+//    @Published var progressViewOpacity = 1.0
     @Published var shutterEffect = false
     
     
-    public func incPicCount(){
-        picCount = (picCount + 1) % model.numPictures
-        if picCount != 0 {
-            progressViewOpacity = 1.0
-        } else {
-            progressViewOpacity = 0.0
-        }
-    }
+//    public func incPicCount(){
+//        picCount = (picCount + 1) % model.numPictures
+//        if picCount != 0 {
+//            progressViewOpacity = 1.0
+//        } else {
+//            progressViewOpacity = 0.0
+//        }
+//    }
     func picCountSync(){
         picCount = model.picCount
     }
@@ -50,7 +50,7 @@ class CameraViewModel: ObservableObject {
     }
     func changeNumPictures() {
         picCount = 0
-        progressViewOpacity = 0.0
+        model.progressViewOpacity = 0.0
         switch model.numPictures{
         case 1:
             model.numPictures = 3
@@ -133,6 +133,7 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     @Published var isCameraBusy = false
     @Published var recentImage: UIImage?
     @Published var numPictures = 5
+    @Published var progressViewOpacity = 0.0
     
     @Published var imgArr2 : [UIImage] = []
     
@@ -258,7 +259,7 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
         photoSettings.flashMode = self.flashMode
         self.output.capturePhoto(with: photoSettings, delegate: self)
         print("[Camera]: Photo's taken \(imgArr2.count)")
-        self.picCount += 1
+//        self.picCount += 1
 
     }
     
@@ -290,9 +291,19 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
             count in
             print("asdfasdfasdfasfsfdfdasfd \(count)")
             self.picCount = count
-            if count < self.numPictures {
+            
+            self.picCount = (self.picCount) % self.numPictures
+            if count == self.numPictures {
+                self.imgArr2 = []
+            }
+            else if count < self.numPictures {
                 self.capturePhoto()
                 print("wow")
+            }
+            if self.picCount != 0 {
+                self.progressViewOpacity = 1.0
+            } else {
+                self.progressViewOpacity = 0.0
             }
         }, imageData)
         
