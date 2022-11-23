@@ -13,6 +13,7 @@ struct CameraView: View {
     @ObservedObject var viewModel = CameraViewModel()
     @State var progressValue: Float = 0.0
 //    @State var progressViewOpacity : Float = 0.0
+    @State var imgArr : [UIImage] = []
     
     var body: some View {
         ZStack {
@@ -124,12 +125,21 @@ struct CameraView: View {
 //                                    viewModel.capturePhoto()
 //    //                                    viewModel.objectWillChange.send()
 //                                    viewModel.incPicCount()
+//                                    print("\(viewModel.picCount) / \(viewModel.numPictures)")
 //                                }
                                 
+                                imgArr.append(UIImage(named: "Juno")!)
+                                print(imgArr)
+                                UIImageWriteToSavedPhotosAlbum(imgArr[0],nil,nil,nil)
                                 viewModel.picCountSync()
                                 viewModel.capturePhoto()
                                 viewModel.incPicCount()
                                 print("\(viewModel.picCount) / \(viewModel.numPictures)")
+//                                Thread.sleep(forTimeInterval: 5.0)
+//                                viewModel.picCountSync()
+//                                viewModel.capturePhoto()
+//                                viewModel.incPicCount()
+//                                print("\(viewModel.picCount) / \(viewModel.numPictures)")
                                 
                             }) {
                                 Circle()

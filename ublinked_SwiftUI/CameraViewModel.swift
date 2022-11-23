@@ -29,6 +29,7 @@ class CameraViewModel: ObservableObject {
     @Published var progressViewOpacity = 0.0
     @Published var shutterEffect = false
     
+    @Published var imgArr2 : [UIImage] = []
     
     public func incPicCount(){
         picCount = (picCount + 1) % numPictures
@@ -72,9 +73,9 @@ class CameraViewModel: ObservableObject {
     func capturePhoto() {
         if isCameraBusy == false {
                     
-//            while picCount < numPictures {
-//                model.capturePhoto()
-//            }
+            while picCount < numPictures {
+                model.capturePhoto()
+            }
             
             hapticImpact.impactOccurred()
             withAnimation(.easeInOut(duration: 0.05)) {
@@ -94,6 +95,7 @@ class CameraViewModel: ObservableObject {
 //            print(model.picCount)
             
             print("[CameraViewModel]: Photo captured! \(model.picCount)")
+            
         } else {
             print("[CameraViewModel]: Camera's busy.")
         }
@@ -104,6 +106,7 @@ class CameraViewModel: ObservableObject {
         model.changeCamera()
         print("[CameraViewModel]: Camera changed!")
     }
+    
     
     init() {
         model = Camera()
@@ -121,6 +124,11 @@ class CameraViewModel: ObservableObject {
             self?.isCameraBusy = result
         }
         .store(in: &self.subscriptions)
+        
+        model.$picCount.sink { [weak self] (result) in
+            self?.picCount = result
+        }
+        .store(in: &self.subscriptions)
     }
 }
 
@@ -130,9 +138,9 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     let output = AVCapturePhotoOutput()
     var photoData = Data(count: 0)
     var isSilentModeOn = true
-    var picCount = 0
     var flashMode: AVCaptureDevice.FlashMode = .off
     
+    @Published var picCount = 0
     @Published var isCameraBusy = false
     @Published var recentImage: UIImage?
     
@@ -276,6 +284,7 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
         photoSettings.flashMode = self.flashMode
         self.output.capturePhoto(with: photoSettings, delegate: self)
         print("[Camera]: Photo's taken \(picCount)")
+        self.picCount += 1
 //        Thread.sleep(forTimeInterval: 5.0)
 //        let p = AVCapturePhotoSettings()
 //        self.output.capturePhoto(with: p, delegate: self)
@@ -292,6 +301,7 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, willBeginCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
         
 //        AudioServicesDisposeSystemSoundID(1108)
+        print("fdghfjgkhl")
         self.isCameraBusy = true
     }
     
@@ -369,9 +379,13 @@ class Camera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
         if save == true {
             print("OKAY")
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-            picCount += 1
+//            self.picCount += 1
             
+        } else {
+            
+            self.picCount -= 1
         }
+        
     }
 
 }
